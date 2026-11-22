@@ -1,0 +1,503 @@
+/* =========================================================
+   ARCHIT — box.css
+   A real 3D shoebox: a floor, four walls and a separate lid.
+
+   Closed: the box sits at an angle on the table.
+   Open:   the lid lifts straight up, is carried off to the
+           side, set down, and slid under the box (peeking
+           out, the way you'd do it on a real table). The
+           camera settles straight above the box.
+
+   Sizes: --H is the box's height on screen, --W its width,
+   --D the depth of the walls. Everything follows from those.
+   ========================================================= */
+
+.stage {
+  --H: min(calc(100svh - 200px), calc(88vw / 1.74), 860px);
+  --W: calc(var(--H) * 1.74);          /* same proportions as the box photos */
+  --D: calc(var(--H) * .13);
+  --closed-scale: .8;
+  --lid-x: 3%;                          /* where the lid rests, under the box */
+  --lid-y: 4.5%;
+  --lid-r: 2.5deg;
+  position: relative;
+  z-index: 1;                           /* header & footer (z 20) stay on top */
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+@media (max-aspect-ratio: 1/1) {      /* phones: an upright box */
+  .stage {
+    --H: min(calc(100svh - 200px), calc(90vw * 1.74));
+    --W: calc(var(--H) / 1.74);
+    --D: calc(var(--W) * .14);
+    --lid-x: 4.5%;
+    --lid-y: 3%;
+  }
+}
+
+.camera {
+  position: relative;
+  width: var(--W);
+  height: var(--H);
+  perspective: calc(max(var(--W), var(--H)) * 3.2);
+  perspective-origin: 50% 50%;
+}
+
+/* ---------- entrance: the box slams down onto the table ----------
+   The box starts well above the table (closer to you, so bigger) and
+   falls hard: it keeps accelerating all the way down, so it hits the
+   table at full speed and stops dead — the box itself never bounces.
+   On impact:
+     • the whole scene takes a short, sharp jolt (a heavy thud)
+     • a soft shadow of displaced air bursts out from under the box
+     • the lid jerks up and slams back down
+   It stays fully on screen the whole time (Chrome can cut off part of a
+   3D object that sticks out past the edge of the window), and only
+   position, size and opacity change — cheap for the graphics card.
+
+   Timing: the fall lasts .42s after a .1s pause, so impact is at .52s. */
+.is-entering .camera {
+  animation: drop .42s cubic-bezier(.6, .04, .7, .15) .1s both paused;
+}
+@keyframes drop {
+  0%   { translate: 0 -12vh; scale: 1.42; opacity: 0; }
+  20%  { opacity: 1; }
+  100% { translate: 0 0; scale: 1; opacity: 1; }
+}
+
+/* the thud: a short downward jolt that dies out fast */
+.is-entering .stage {
+  animation: thud .34s linear .52s both paused;
+}
+@keyframes thud {
+  0%   { translate: 0 0; rotate: 0deg; }
+  12%  { translate: 2px 14px; rotate: .5deg; }
+  30%  { translate: -2px -4px; rotate: -.25deg; }
+  50%  { translate: 1px 3px; rotate: .12deg; }
+  72%  { translate: 0 -1px; rotate: 0deg; }
+  100% { translate: 0 0; rotate: 0deg; }
+}
+
+/* displaced air: a soft shadow that bursts out from under the box */
+.impact {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 0;
+  width: calc(var(--W) * 1.05);
+  height: calc(var(--H) * .9);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / .4), rgb(0 0 0 / .14) 60%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.is-entering .impact {
+  animation: air-push .7s cubic-bezier(.15, .7, .3, 1) .51s both paused;
+}
+@keyframes air-push {
+  0%   { opacity: 0;  scale: .7; }
+  10%  { opacity: 1;  scale: .95; }
+  100% { opacity: 0;  scale: 1.6; }
+}
+
+/* the lid jerks up from the impact and slams back down */
+.is-entering.is-closed .lid__body {
+  animation: lid-jolt .36s linear .52s both paused;
+}
+@keyframes lid-jolt {
+  0%   { transform: translate3d(0, 0, 0) rotateX(0deg) rotateZ(0deg); animation-timing-function: cubic-bezier(.1, .8, .3, 1); }
+  34%  { transform: translate3d(0, -1.2%, calc(var(--H) * .09)) rotateX(5deg) rotateZ(-1.1deg); animation-timing-function: cubic-bezier(.6, 0, 1, .6); }
+  100% { transform: translate3d(0, 0, 0) rotateX(0deg) rotateZ(0deg); }
+}
+
+/* the handwritten hint appears once things have settled */
+.is-entering .guide--open { animation: hint-in .5s var(--ease-out) 1.05s both paused; }
+@keyframes hint-in { from { opacity: 0; translate: 0 8px; } }
+
+/* app.js adds .is-ready once the box photos are loaded, so the box never
+   falls in half-drawn. (Kept last so it wins over the 'paused' above.) */
+.is-ready.is-entering .camera,
+.is-ready.is-entering .stage,
+.is-ready.is-entering .impact,
+.is-ready.is-entering.is-closed .lid__body,
+.is-ready.is-entering .guide--open { animation-play-state: running; }
+
+
+/* ---------- the box ---------- */
+.box {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(32deg) rotateZ(-6deg) scale(var(--closed-scale));
+  transition: transform 1.5s var(--ease-out) .25s;
+}
+.is-open .box {
+  /* settles perfectly flat so the click layer lines up exactly */
+  transform: rotateX(0deg) rotateZ(0deg) scale(1);
+  transition: transform 1.5s cubic-bezier(.5, 0, .2, 1) .15s;
+}
+
+/* the floor of the box: the objects live here */
+.box__inside {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #1c1b1a;
+  /* the box's shadow on the table (drawn here, not as a separate layer,
+     because a separate layer confuses Chrome's 3D click detection) */
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / .08),
+    calc(var(--D) * .2) calc(var(--D) * .35) calc(var(--D) * .45) rgb(0 0 0 / .28),
+    calc(var(--D) * .8) calc(var(--D) * 1.3) calc(var(--D) * 1.9) rgb(0 0 0 / .2);
+}
+/* the photo of the empty box (turned 90° on an upright phone box) */
+.box__inside::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  translate: -50% -50%;
+  /* zoomed a touch so the photo's pale edges stay hidden */
+  background: #1c1b1a url("../assets/box/inside.jpg") center / 103.5% 105% no-repeat;
+}
+@media (max-aspect-ratio: 1/1) {
+  .box__inside::before { width: var(--H); height: var(--W); rotate: 90deg; }
+}
+
+/* the floor area inside the photographed walls, where objects sit.
+   Used twice: for the objects, and for their invisible click twins. */
+.tray {
+  position: absolute;
+  inset: 5.5% 6.5% 5.5% 7.5%;
+  z-index: 1;
+  container-type: size;
+}
+@media (max-aspect-ratio: 1/1) {
+  .tray { inset: 7.5% 5.5% 6.5% 5.5%; }
+}
+
+/* ---------- walls (black cardboard) ---------- */
+.wall {
+  position: absolute;
+  background-image: var(--tex-grain);
+  border-top: 2px solid #3d3a36;    /* the cut edge of the cardboard */
+}
+.wall--back {
+  left: 0; top: calc(var(--D) * -1);
+  width: var(--W); height: var(--D);
+  transform-origin: 50% 100%;
+  transform: rotateX(-90deg);
+  background-color: #262422;
+}
+.wall--front {
+  left: 0; top: calc(var(--H) - var(--D));
+  width: var(--W); height: var(--D);
+  transform-origin: 50% 100%;
+  transform: rotateX(-90deg);
+  background-color: #1a1918;
+}
+.wall--left {
+  top: 0; left: calc(var(--D) * -1);
+  width: var(--D); height: var(--H);
+  transform-origin: 100% 50%;
+  transform: rotateY(90deg);
+  background-color: #222020;
+  border-top: 0;
+  border-left: 2px solid #3d3a36;
+}
+.wall--right {
+  top: 0; left: var(--W);
+  width: var(--D); height: var(--H);
+  transform-origin: 0 50%;
+  transform: rotateY(-90deg);
+  background-color: #161514;
+  border-top: 0;
+  border-right: 2px solid #3d3a36;
+}
+
+/* ---------- the lid ----------
+   A top (your lid photo) with four short sides that hang down
+   over the walls, like a real shoebox lid. */
+.lid {
+  --lift: calc(var(--D) + var(--H) * .32);   /* how high it's lifted */
+  position: absolute;
+  inset: calc(var(--D) * -.06);              /* a touch bigger than the box */
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, var(--D));
+  animation:
+    lid-on 1.6s both,
+    lid-peek 6s var(--ease-in-out) 3.4s infinite;
+}
+.is-open .lid {
+  pointer-events: none;
+  animation: lid-off 1.9s both;
+}
+
+/* lift → carry to the side → set down → slide under the box */
+@keyframes lid-off {
+  0% {
+    transform: translate3d(0, 0, var(--D)) rotateZ(0deg) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.35, 0, .25, 1);
+  }
+  24% {
+    transform: translate3d(-1%, -2%, var(--lift)) rotateZ(-2deg) rotateX(4deg);
+    animation-timing-function: cubic-bezier(.45, 0, .3, 1);
+  }
+  56% {
+    transform: translate3d(106%, 5%, var(--lift)) rotateZ(7deg) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.5, 0, .5, 1);
+  }
+  70% {
+    transform: translate3d(106%, 5%, -3px) rotateZ(7deg) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.3, 0, .15, 1);
+  }
+  100% {
+    transform: translate3d(var(--lid-x), var(--lid-y), -3px) rotateZ(var(--lid-r)) rotateX(0deg);
+  }
+}
+/* the same journey backwards */
+@keyframes lid-on {
+  0% {
+    transform: translate3d(var(--lid-x), var(--lid-y), -3px) rotateZ(var(--lid-r)) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.6, 0, .4, 1);
+  }
+  28% {
+    transform: translate3d(106%, 5%, -3px) rotateZ(7deg) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.5, 0, .5, 1);
+  }
+  44% {
+    transform: translate3d(106%, 5%, var(--lift)) rotateZ(7deg) rotateX(0deg);
+    animation-timing-function: cubic-bezier(.45, 0, .3, 1);
+  }
+  78% {
+    transform: translate3d(-1%, -2%, var(--lift)) rotateZ(-2deg) rotateX(4deg);
+    animation-timing-function: cubic-bezier(.4, 0, .4, 1.3);
+  }
+  100% {
+    transform: translate3d(0, 0, var(--D)) rotateZ(0deg) rotateX(0deg);
+  }
+}
+/* while closed, the lid lifts a crack every few seconds */
+@keyframes lid-peek {
+  0%, 80%, 100% { transform: translate3d(0, 0, var(--D)) rotateX(0deg); }
+  86% { transform: translate3d(0, -.6%, calc(var(--D) + var(--H) * .05)) rotateX(2.5deg); }
+  91% { transform: translate3d(0, 0, var(--D)) rotateX(0deg); }
+  94% { transform: translate3d(0, 0, calc(var(--D) + var(--H) * .012)) rotateX(0deg); }
+}
+
+.lid__top {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #1b1a19;
+}
+/* the lid photo. Always landscape; turned 90° on an upright phone box */
+.face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  translate: -50% -50%;
+  /* zoomed a touch so the photo's pale edges stay hidden */
+  background: #1b1a19 url("../assets/box/lid.jpg") center / 102% 103.5% no-repeat;
+}
+@media (max-aspect-ratio: 1/1) {
+  .face { width: var(--H); height: var(--W); rotate: -90deg; }
+}
+.face::after {                     /* a soft sheen across the lid */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(130deg, rgb(255 255 255 / .07), transparent 45%);
+}
+
+.lid__body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* the lid's four sides */
+.lid__side {
+  --h: calc(var(--D) * .5);
+  position: absolute;
+  background: var(--tex-grain), #1c1b1a;
+  color: #b9b2a6;
+}
+.lid__side--front,
+.lid__side--back {
+  left: 0;
+  width: 100%;
+  height: var(--h);
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+}
+.lid__side--front { top: 100%; background-color: #1f1e1c; border-top: 1.5px solid #3d3a36; }
+.lid__side--back  { top: 0; background-color: #2a2826; }
+.lid__side--left,
+.lid__side--right {
+  top: 0;
+  width: var(--h);
+  height: 100%;
+  transform-origin: 0 50%;
+  transform: rotateY(90deg);
+}
+.lid__side--left  { left: 0; background-color: #252321; }
+.lid__side--right { left: 100%; background-color: #151413; border-left: 1.5px solid #3d3a36; }
+.lid__side span {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  translate: 0 -50%;
+  white-space: nowrap;
+}
+
+/* ---------- the click layer ----------
+   Chrome can't reliably work out what's under the cursor inside a 3D
+   scene with perspective, so the clickable shapes live in this flat,
+   invisible layer laid exactly over the open box. app.js builds it. */
+.hits {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.hit {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  z-index: var(--z, 2);
+  width: calc(var(--wn) * 1cqmin);
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: rotate(var(--r));
+  /* trims the click area to the visible part of a sticker (see --hit-clip
+     in keepsakes.css) so empty PNG margins don't steal clicks */
+  clip-path: var(--hit-clip, none);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.is-open .hit { pointer-events: auto; }
+.hit:hover { z-index: 30; }
+.hit:focus { outline: none; }
+.hit:focus-visible { outline: 2px dashed var(--red); outline-offset: 6px; }
+
+/* ---------- the click-to-open area ---------- */
+.opener {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.opener:focus-visible { outline: 2px dashed var(--red); outline-offset: -10%; }
+.is-open .opener { display: none; }
+
+/* ---------- handwritten guides ---------- */
+.guide {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  font: 21px/1 var(--f-marker);
+  color: var(--ink);
+  text-transform: uppercase;
+  transition: opacity .5s, translate .6s var(--ease-out);
+}
+.guide svg { display: block; overflow: visible; }
+.guide--open {
+  left: 56%;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  rotate: -8deg;
+}
+.guide--open svg { width: 44px; height: 48px; }
+.guide--pick {
+  right: calc(100% + 28px);
+  top: 50%;
+  rotate: -10deg;
+  width: 140px;
+  text-align: left;
+}
+.guide--pick svg { width: 70px; height: 54px; margin: 8px 0 0 20px; }
+/* "close the lid" — handwritten, inside the open box, clickable */
+.guide--close {
+  right: 9%;
+  bottom: 8%;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  rotate: -7deg;
+  pointer-events: auto;
+}
+.guide--close svg { width: 40px; height: 38px; transition: translate .3s var(--ease-out); }
+.guide--close:hover svg { translate: 3px 3px; }
+.guide--close:hover { color: var(--red-ink); }
+.guide--close:focus-visible { outline: 2px dashed var(--red); outline-offset: 4px; }
+.is-closed .guide--close { opacity: 0; translate: 0 10px; pointer-events: none; }
+.is-open .guide--close { transition-delay: 1.6s; }
+@media (max-aspect-ratio: 1/1) {
+  .guide--close { right: 7%; bottom: 4%; font-size: 15px; }
+  .guide--close svg { width: 30px; height: 28px; }
+}
+
+.is-open .guide--open,
+.is-closed .guide--pick { opacity: 0; translate: 0 10px; }
+.is-open .guide--pick { transition-delay: 1.6s; }
+@media (max-aspect-ratio: 1/1) { .guide--open { font-size: 17px; left: 50%; } }
+
+/* ---------- section list beside the open box (very wide screens) ---------- */
+.sidenav {
+  position: absolute;
+  z-index: 6;
+  left: calc(100% + 28px);
+  bottom: 4%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity .5s, translate .6s var(--ease-out);
+}
+.sidenav a {
+  display: block;
+  max-width: 180px;
+  padding: 4px 0;
+  color: var(--ink);
+  text-decoration: none;
+  line-height: 1.35;
+}
+.sidenav a:hover { color: var(--red-ink); }
+.sidenav::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 10px;
+  margin-top: 10px;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 10'><path d='M2 7c18-4 40-6 66-4M14 9c14-2 30-3 46-2' fill='none' stroke='%2316130f' stroke-width='1.6' stroke-linecap='round'/></svg>") no-repeat;
+}
+.is-closed .sidenav { opacity: 0; translate: 0 10px; pointer-events: none; }
+.is-open .sidenav { transition-delay: 1.6s; }
+/* only when there's room beside the big box */
+@media (max-width: 1899px) {
+  .sidenav, .guide--pick { display: none; }
+}
+
+/* skip transitions (used when jumping straight to a project) */
+.is-instant .box,
+.is-instant .guide,
+.is-instant .guide--close,
+.is-instant .sidenav { transition: none !important; }

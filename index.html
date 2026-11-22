@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Archit — Portfolio</title>
+  <meta name="description" content="Archit — a collection of ideas, work and everything in between.">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Fonts: Archivo (heavy display + body), Permanent Marker & Caveat (handwriting) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Caveat:wght@500;700&family=Permanent+Marker&display=swap">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/box.css">
+  <link rel="stylesheet" href="css/keepsakes.css">
+  <link rel="stylesheet" href="css/project.css">
+</head>
+<body class="is-closed is-entering">
+
+  <div class="surface" aria-hidden="true"></div>
+
+  <main class="scene" id="scene">
+
+    <!-- ===================== TOP BAR ===================== -->
+    <header class="topbar">
+      <a class="logo" href="#" aria-label="Archit — home">Archit</a>
+      <div class="navbtns">
+        <a class="navbtn navlink ui" href="#/about">About</a>
+        <a class="navbtn navlink ui" href="#/resume">Resume</a>
+        <button class="navbtn ui" id="closebox-btn" type="button" hidden>
+          Homepage <span class="x" aria-hidden="true">↔</span>
+        </button>
+        <button class="navbtn ui" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+          Menu <span class="burger" aria-hidden="true"><i></i></span>
+        </button>
+        <nav class="menu" id="menu" hidden aria-label="Work">
+          <p class="menu__title ui">What's in the box</p>
+          <ol id="menu-list"></ol>
+          <p class="menu__title menu__title--more ui">More</p>
+          <ul id="menu-more"></ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ===================== THE BOX ===================== -->
+    <div class="stage">
+      <div class="impact" aria-hidden="true"></div>
+      <div class="camera">
+
+        <div class="box" id="box">
+          <!-- inside of the box -->
+          <div class="box__inside" id="inside" inert>
+            <div class="tray">
+
+            <!-- 07 · DUOTELUGU — lungi polaroid -->
+            <button class="keepsake k-lungi" type="button" data-project="duotelugu" aria-label="Open Duolingo Telugu Launch">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/duotelugu.png" alt="" onerror="this.remove()">
+                <span class="polaroid">
+                  <span class="polaroid__photo">
+                    <span class="polaroid__ph">Duo in a lungi</span>
+                    <img class="slot slot--cover" src="assets/objects/duo-telugu.png" alt="" onerror="this.remove()">
+                  </span>
+                  <span class="polaroid__caption">DuoTelugu</span>
+                </span>
+                <span class="tape"></span>
+              </span>
+            </button>
+
+            <!-- 05 · DUOLINGO × LAKMÉ FASHION WEEK — backstage pass -->
+            <button class="keepsake k-pass" type="button" data-project="duolingo-lfw" aria-label="Open DuolingoXLakmeFashionWeek">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/duolingo-lfw.png" alt="" onerror="this.remove()">
+                <span class="lanyard"></span>
+                <span class="pass">
+                  <span class="pass__top"><b>Backstage</b><i>ALL ACCESS</i></span>
+                  <span class="pass__photo">
+                    <span class="pass__ph">Duo<br>here</span>
+                    <img class="slot" src="assets/objects/duo-lfw.png" alt="" onerror="this.remove()">
+                  </span>
+                  <span class="pass__name">Duolingo ×<br>Lakmé Fashion Week</span>
+                  <span class="pass__band">Runway</span>
+                </span>
+              </span>
+            </button>
+
+            <!-- 01 · FNS 2.0 — fish sticker -->
+            <button class="keepsake k-fish" type="button" data-project="fns" aria-label="Open Licious FNS2.0">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/fns.png" alt="" onerror="this.remove()">
+                <svg viewBox="0 0 200 100" aria-hidden="true" focusable="false">
+                  <g stroke="#fbf6ec" stroke-width="12" stroke-linejoin="round" fill="#fbf6ec">
+                    <path d="M28 50C44 16 112 10 150 40l36-24c-6 22-6 46 0 68l-36-24C112 90 44 84 28 50z"/>
+                    <path d="M82 22c14-16 38-16 50 4"/>
+                  </g>
+                  <path d="M82 24c14-14 36-14 48 4z" fill="#a8160f"/>
+                  <path d="M28 50C44 16 112 10 150 40l36-24c-6 22-6 46 0 68l-36-24C112 90 44 84 28 50z" fill="#e1261c"/>
+                  <path d="M32 55c22 22 74 26 114 6-36 12-82 10-114-6z" fill="#f5ead7"/>
+                  <path d="M150 40l36-24c-6 22-6 46 0 68l-36-24z" fill="#a8160f"/>
+                  <path d="M70 32c8 10 8 26 0 36" fill="none" stroke="#16130f" stroke-width="2.4" stroke-linecap="round"/>
+                  <circle cx="50" cy="44" r="7" fill="#fbf6ec"/>
+                  <circle cx="51" cy="44" r="4" fill="#16130f"/>
+                  <circle cx="52.4" cy="42.6" r="1.2" fill="#fff"/>
+                  <path d="M29 51l9 1.5" stroke="#16130f" stroke-width="2" stroke-linecap="round"/>
+                  <text x="80" y="57" font-family="Archivo, sans-serif" font-weight="900" font-style="italic" font-size="21" fill="#fbf6ec" letter-spacing="-.5">FNS 2.0</text>
+                </svg>
+              </span>
+            </button>
+
+            <!-- 06 · MORAL CODE — sneaker sticker -->
+            <button class="keepsake k-shoe" type="button" data-project="mancode" aria-label="Open MoralCode Shoot">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/mancode.png" alt="" onerror="this.remove()">
+                <svg viewBox="0 0 200 100" aria-hidden="true" focusable="false">
+                  <g fill="#fbf6ec" stroke="#fbf6ec" stroke-width="12" stroke-linejoin="round">
+                    <path d="M14 78C10 60 12 40 30 30c12 6 24 8 34 4l10-14c8-2 14 4 12 12 18 8 38 14 54 20 24 4 46 10 50 24v12H14z"/>
+                    <path d="M10 78h180c4 0 6 8 0 12H18c-8 0-12-8-8-12z"/>
+                  </g>
+                  <path d="M14 78C10 60 12 40 30 30c12 6 24 8 34 4l10-14c8-2 14 4 12 12 18 8 38 14 54 20 24 4 46 10 50 24v2H14z" fill="#16130f"/>
+                  <path d="M14 78c-2-12 0-22 8-28l18 10 6 18z" fill="#e1261c"/>
+                  <path d="M118 78c4-14 20-22 40-20 16 2 26 8 30 18v2z" fill="#f5ead7"/>
+                  <path d="M40 66c30-10 60-12 92-6" fill="none" stroke="#d4f53c" stroke-width="5" stroke-linecap="round"/>
+                  <g stroke="#fbf6ec" stroke-width="2.4" stroke-linecap="round">
+                    <path d="M76 30l8 8M90 34l8 8M104 39l8 8M118 44l8 8"/>
+                  </g>
+                  <path d="M10 78h180c4 0 6 8 0 12H18c-8 0-12-8-8-12z" fill="#f5ead7" stroke="#16130f" stroke-width="1.6"/>
+                  <path d="M16 84h170" stroke="#e1261c" stroke-width="2"/>
+                  <text x="24" y="46" font-family="Archivo, sans-serif" font-weight="800" font-size="5.2" fill="#f5ead7" letter-spacing="1" transform="rotate(-20 24 46)">MORAL CODE</text>
+                </svg>
+              </span>
+            </button>
+
+            <!-- 04 · OLIVE HOTEL — key fob -->
+            <button class="keepsake k-olive" type="button" data-project="olive-hotel" aria-label="Open Olive Branding">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/olive-hotel.png" alt="" onerror="this.remove()">
+                <svg class="key" viewBox="0 0 30 60" aria-hidden="true" focusable="false">
+                  <circle cx="15" cy="50" r="8" fill="none" stroke="#a9b1b7" stroke-width="2.4"/>
+                  <path d="M15 42V6M15 10h7M15 16h5M15 22h7" stroke="#b9a15a" stroke-width="3.4" stroke-linecap="round"/>
+                  <circle cx="15" cy="6" r="4.5" fill="#c9b06a"/>
+                </svg>
+                <span class="fob">
+                  <span class="fob__logo">
+                    <b>Olive</b>
+                    <img class="slot" src="assets/logos/olive.png" alt="" onerror="this.remove()">
+                  </span>
+                  <svg class="fob__branch" viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+                    <path d="M4 22C20 18 38 12 56 4" fill="none" stroke="#d2b765" stroke-width="1.6" stroke-linecap="round"/>
+                    <g fill="#a7b46a"><ellipse cx="16" cy="15" rx="7" ry="2.4" transform="rotate(-35 16 15)"/><ellipse cx="30" cy="10" rx="7" ry="2.4" transform="rotate(30 30 10)"/><ellipse cx="42" cy="6" rx="7" ry="2.4" transform="rotate(-40 42 6)"/></g>
+                    <circle cx="24" cy="22" r="3.4" fill="#2f3a10"/><circle cx="38" cy="17" r="3" fill="#2f3a10"/>
+                  </svg>
+                  <span class="fob__room">Room<strong>004</strong></span>
+                </span>
+              </span>
+            </button>
+
+            <!-- 08 · DUOULTIMATUM — final notice envelope -->
+            <button class="keepsake k-ultimatum" type="button" data-project="duoultimatum" aria-label="Open The Ultimate Reminder">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/duoultimatum.png" alt="" onerror="this.remove()">
+                <span class="envelope">
+                  <span class="envelope__mark">Reminder</span>
+                  <span class="envelope__stamp">
+                    <span class="envelope__img">
+                      <svg viewBox="0 0 40 50" aria-hidden="true" focusable="false">
+                        <path d="M8 18l10 5M32 18l-10 5" stroke="#16130f" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="14" cy="27" r="3" fill="#16130f"/><circle cx="26" cy="27" r="3" fill="#16130f"/>
+                        <path d="M14 39c4-3 8-3 12 0" fill="none" stroke="#16130f" stroke-width="2.6" stroke-linecap="round"/>
+                      </svg>
+                      <img class="slot slot--cover" src="assets/objects/duo-ultimatum.png" alt="" onerror="this.remove()">
+                    </span>
+                  </span>
+                  <span class="envelope__to">Final notice — to:</span>
+                  <span class="envelope__line"></span>
+                  <span class="envelope__line"></span>
+                </span>
+              </span>
+            </button>
+
+            <!-- 03 · PACKAGING — Licious pack -->
+            <button class="keepsake k-pack" type="button" data-project="packaging" aria-label="Open Sizzl Packaging">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/packaging.png" alt="" onerror="this.remove()">
+                <span class="pack">
+                  <span class="pack__well">
+                    <svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+                      <path d="M10 30c0-12 12-20 26-18 10 2 16 10 14 20-2 12-14 18-26 16S10 40 10 30z" fill="#d9707a"/>
+                      <path d="M40 22c4-10 18-14 28-8s12 18 6 26-20 10-28 4-9-14-6-22z" fill="#e3878d"/>
+                      <path d="M66 36c2-8 12-12 20-8s10 14 4 20-16 6-21 0-5-8-3-12z" fill="#cf6670"/>
+                      <g fill="none" stroke="#f6c6c2" stroke-width="1.6" stroke-linecap="round" opacity=".9">
+                        <path d="M18 26c6 2 10 8 20 6M46 22c6 4 12 2 18 8M70 38c4 0 8 4 14 2"/>
+                      </g>
+                    </svg>
+                    <span class="pack__film"></span>
+                  </span>
+                  <span class="pack__sleeve">
+                    <span class="pack__logo">
+                      <b>Licious</b>
+                      <img class="slot" src="assets/logos/licious.png" alt="" onerror="this.remove()">
+                    </span>
+                    <span class="pack__meta">Pack 003</span>
+                  </span>
+                </span>
+              </span>
+            </button>
+
+            <!-- 02 · LAUNCH EVENT — ticket with flame -->
+            <button class="keepsake k-launch" type="button" data-project="launch-event" aria-label="Open Sizzl Launch">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/launch-event.png" alt="" onerror="this.remove()">
+                <span class="ticket">
+                  <span class="ticket__stub"><span>Admit one</span></span>
+                  <span class="ticket__main">
+                    <span class="ticket__row"><span>Box / Work / 003</span><span>№ 0003</span></span>
+                    <span class="ticket__title">Sizzl<br>Launch</span>
+                    <span class="ticket__row"><span>Gate 01</span><span>Seat 002</span></span>
+                  </span>
+                </span>
+                <svg class="flame" viewBox="0 0 100 104" aria-hidden="true" focusable="false">
+                  <path d="M50 5c12 23 35 33 32 61-2 22-20 32-32 32-20 0-34-14-32-34 2-16 14-22 16-36 6 10 10 12 12 16 4-14 6-26 4-39z" fill="#fbf6ec" stroke="#fbf6ec" stroke-width="12" stroke-linejoin="round"/>
+                  <path d="M50 5c12 23 35 33 32 61-2 22-20 32-32 32-20 0-34-14-32-34 2-16 14-22 16-36 6 10 10 12 12 16 4-14 6-26 4-39z" fill="#e1261c"/>
+                  <path d="M50 40c8 15 20 22 16 38-3 12-10 16-16 16-10 0-17-8-16-18 1-10 10-14 12-24 2 6 4 6 6 8 0-8 0-14-2-20z" fill="#f6c400"/>
+                  <path d="M50 66c4 7 9 10 7 17-1 5-4 7-7 7-5 0-8-4-7-8s4-6 5-10c1 2 2 2 2 3z" fill="#fbf6ec"/>
+                </svg>
+              </span>
+            </button>
+
+            <!-- 02 · THE MOTHER OF ALL MOMOS — die-cut momo sticker -->
+            <button class="keepsake k-momo" type="button" data-project="momos" aria-label="Open TheMotherOfAllMomos">
+              <span class="ks">
+                <img class="sticker-img" src="assets/stickers/momos.png" alt="" onerror="this.remove()">
+                <svg viewBox="0 0 120 92" aria-hidden="true" focusable="false">
+                  <g fill="#fbf6ec" stroke="#fbf6ec" stroke-width="12" stroke-linejoin="round">
+                    <path d="M14 58C10 40 28 20 60 18c32 2 50 22 46 40-4 14-88 14-92 0z"/>
+                    <path d="M22 70h76l-4 14H26z"/>
+                  </g>
+                  <path d="M14 58C10 40 28 20 60 18c32 2 50 22 46 40-4 14-88 14-92 0z" fill="#f6ead2"/>
+                  <path d="M16 57c8 11 80 11 88 0-2 12-86 14-88 0z" fill="#e3c995"/>
+                  <g fill="none" stroke="#d9bf8c" stroke-width="2.4" stroke-linecap="round">
+                    <path d="M32 30c3-10 9-10 11-2M45 24c4-11 11-11 13-2M60 22c4-11 11-10 12-1M74 26c4-9 10-8 11 0"/>
+                    <path d="M40 34c4 8 6 14 6 22M58 28c1 9 1 18 0 28M76 32c-3 8-5 15-5 24"/>
+                  </g>
+                  <path d="M22 70h76l-4 14H26z" fill="#e1261c"/>
+                  <text x="60" y="80" text-anchor="middle" font-family="Archivo, sans-serif" font-weight="900" font-size="6" fill="#fbf6ec" textLength="66" lengthAdjust="spacingAndGlyphs">MOTHER OF ALL MOMOS</text>
+                </svg>
+              </span>
+            </button>
+
+            <!-- loose bits: decoration only -->
+            <span class="decor card-note" aria-hidden="true">
+              <span>- Observe</span><span>- Question</span><span>- Create</span><span>- Repeat</span>
+              <svg viewBox="0 0 60 10"><path d="M2 6c10-4 20 2 30-1s16-3 26-1" fill="none" stroke="#16130f" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <svg class="decor smiley" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <circle cx="20" cy="20" r="18" fill="#f6c400" stroke="#16130f" stroke-width="1.6"/>
+              <ellipse cx="14" cy="16" rx="2" ry="3.4" fill="#16130f"/><ellipse cx="26" cy="16" rx="2" ry="3.4" fill="#16130f"/>
+              <path d="M11 24c4 6 14 6 18 0" fill="none" stroke="#16130f" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            <svg class="decor star" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <defs><linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ab"/><stop offset=".6" stop-color="#e6eaee"/><stop offset="1" stop-color="#7d868e"/></linearGradient></defs>
+              <path d="M20 2l4.9 11.6 12.6.9-9.7 8 3.1 12.3L20 28.1 9.1 34.8l3.1-12.3-9.7-8 12.6-.9z" fill="url(#silver)" stroke="#5f676e" stroke-width="1" stroke-linejoin="round"/>
+            </svg>
+            <svg class="decor crown" viewBox="0 0 60 44" aria-hidden="true" focusable="false">
+              <path d="M6 38 3 10l15 14L30 4l12 20 15-14-3 28z" fill="none" stroke="#e1261c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+            </div>
+          </div>
+
+          <!-- walls -->
+          <div class="wall wall--back"></div>
+          <div class="wall wall--front"></div>
+          <div class="wall wall--left"></div>
+          <div class="wall wall--right"></div>
+
+          <!-- the lid -->
+          <div class="lid" id="lid">
+           <div class="lid__body">
+            <div class="lid__top">
+              <div class="face" role="img" aria-label="Black box printed with ARCHIT — a collection of ideas, work and everything in between."></div>
+            </div>
+            <div class="lid__side lid__side--back"></div>
+            <div class="lid__side lid__side--left"></div>
+            <div class="lid__side lid__side--right"></div>
+            <div class="lid__side lid__side--front"><span class="ui">Archit — box no. 001</span></div>
+           </div>
+          </div>
+        </div>
+
+        <!-- invisible click layer over the open box (filled in by app.js) -->
+        <div class="hits" id="hits" inert><div class="tray" id="hits-tray"></div></div>
+
+        <!-- click anywhere on the closed box to open it -->
+        <button class="opener" id="opener" type="button" aria-label="Open the box"></button>
+
+        <!-- handwritten guides -->
+        <div class="guide guide--open" aria-hidden="true">
+          <svg viewBox="0 0 44 48"><path d="M30 46C14 40 6 26 10 6M2 14l8-10 9 8" fill="none" stroke="#16130f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Click to<br>&nbsp;open</span>
+        </div>
+        <button class="guide guide--close" id="closelid" type="button" aria-label="Close the lid">
+          <span>Close<br>&nbsp;the lid</span>
+          <svg viewBox="0 0 48 44" aria-hidden="true"><path d="M4 6c10 2 26 10 34 30M30 32l8 6 4-10" fill="none" stroke="#16130f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="guide guide--pick" aria-hidden="true">
+          <span>Pick an<br>object →</span>
+          <svg viewBox="0 0 70 54"><path d="M4 4c-2 26 18 42 58 40M52 34l12 10-14 8" fill="none" stroke="#16130f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <ol class="sidenav ui" id="sidenav" aria-label="Work"></ol>
+      </div>
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footbar ui">
+      <span class="footbar__name">Portfolio 2026</span>
+    </footer>
+  </main>
+
+  <!-- ===================== PROJECT PAGE (filled in by app.js) ===================== -->
+  <div class="project" id="project" role="dialog" aria-modal="true" aria-labelledby="project-title" hidden>
+    <div class="project__backdrop" data-close></div>
+    <article class="project__sheet" id="sheet" tabindex="-1">
+      <header class="pbar">
+        <button class="logo" type="button" data-close aria-label="Archit — homepage">Archit</button>
+        <div class="pbar__right">
+          <span class="pbar__count ui">Box / Work / <b id="count">001</b> of <span id="total">008</span></span>
+          <div class="pbar__arrows">
+            <button class="pbar__arrow" id="prev" type="button" aria-label="Previous project">←</button>
+            <button class="pbar__arrow" id="next" type="button" aria-label="Next project">→</button>
+          </div>
+          <button class="pbar__back ui" id="back" type="button" data-close>Homepage <span class="arr" aria-hidden="true">↔</span></button>
+        </div>
+      </header>
+      <div class="project__content" id="content"></div>
+    </article>
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

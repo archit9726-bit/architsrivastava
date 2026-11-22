@@ -1,0 +1,618 @@
+/* =========================================================
+   ARCHIT — keepsakes.css
+   The eight objects inside the box, plus loose bits.
+
+   1cqmin = 1% of the box floor's shorter side, so everything
+   scales with the box.
+
+   Each object has a settings line, e.g.
+     .k-fish { --wn: 38; --x: 39%; --y: 6%; --r: -8deg; --z: 4; }
+       --wn  width          --x / --y  position in the box
+       --r   rotation       --z        stacking (higher = on top)
+   Nudge these to rearrange the box.
+
+   IMAGE SLOTS — some objects show an image if you add one:
+     assets/logos/licious.png         (on the packaging sleeve)
+     assets/logos/olive.png           (on the hotel key fob)
+     assets/objects/duo-lfw.png       (backstage pass photo)
+     assets/objects/duo-telugu.png    (the lungi polaroid)
+     assets/objects/duo-ultimatum.png (the postage stamp)
+   Until then, a designed placeholder shows instead.
+   ========================================================= */
+
+/* ---------- shared behaviour ---------- */
+.keepsake {
+  position: absolute;
+  display: block;
+  width: calc(var(--wn) * 1cqmin);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  filter:
+    drop-shadow(.12cqmin .22cqmin .12cqmin rgb(40 24 8 / .55))
+    drop-shadow(.9cqmin 1.5cqmin 1.8cqmin rgb(40 24 8 / .28));
+}
+.keepsake span { display: block; }
+.keepsake:focus { outline: none; }
+.keepsake svg { display: block; overflow: visible; }
+
+.box__inside .keepsake {
+  left: var(--x);
+  top: var(--y);
+  z-index: var(--z, 2);
+  transform: rotate(var(--r));
+  transition: transform .6s var(--spring), filter .5s var(--ease-out), z-index 0s .55s;
+}
+.box__inside .keepsake { pointer-events: none; }   /* clicks go to the click layer (see box.css) */
+@media (hover: hover) {
+  .box__inside .keepsake.is-hover {
+    transform: rotate(calc(var(--r) * .5)) scale(1.07);
+    z-index: 30;
+    transition-delay: 0s;
+    filter:
+      drop-shadow(.6cqmin 1cqmin .8cqmin rgb(60 36 12 / .3))
+      drop-shadow(2.4cqmin 3.6cqmin 3.4cqmin rgb(60 36 12 / .26));
+  }
+}
+.box__inside .keepsake.is-focus,
+.box__inside .keepsake.is-picked {
+  transform: rotate(calc(var(--r) * .5)) scale(1.07);
+  z-index: 30;
+  transition-delay: 0s;
+  filter:
+    drop-shadow(.6cqmin 1cqmin .8cqmin rgb(60 36 12 / .3))
+    drop-shadow(2.4cqmin 3.6cqmin 3.4cqmin rgb(60 36 12 / .26));
+}
+.box__inside .keepsake.is-picked { transform: rotate(0deg) scale(1.14); z-index: 40; }
+
+.ks {
+  position: relative;
+  transform: perspective(80cqmin) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg));
+  transition: transform .4s var(--ease-out);
+}
+
+/* things settle as the flap opens */
+.is-open .box__inside .keepsake,
+.is-open .decor { animation: settle 1s var(--ease-out) calc(.7s + var(--i, 0) * .06s) both; }
+.is-instant .box__inside .keepsake,
+.is-instant .decor { animation: none; }
+@keyframes settle {
+  from { translate: 0 -1cqmin; scale: 1.035; }
+}
+
+/* YOUR OWN STICKER ARTWORK
+   Save a PNG (transparent background) in assets/stickers/ named after
+   the project id, e.g. assets/stickers/fns.png — it replaces the drawn
+   version automatically. The width still comes from --wn below. */
+.sticker-img { display: block; width: 100%; height: auto; }
+.ks:has(> .sticker-img) > :not(.sticker-img) { display: none !important; }
+
+/* reusable bits */
+.tape {
+  position: absolute !important;
+  z-index: 5;
+  width: calc(var(--tw, 11) * 1cqmin);
+  height: 3.4cqmin;
+  rotate: var(--tr, -4deg);
+  background: var(--tex-grain), rgb(234 222 194 / .84);
+  clip-path: var(--tape-edge);
+}
+.slot {                            /* an image you can drop in later */
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.slot--cover { object-fit: cover; }
+
+/* =========================================================
+   01 · FNS 2.0 — a die-cut fish sticker
+   ========================================================= */
+.k-fish { --wn: 44; --x: 38.1%; --y: 12%; --r: -10deg; --z: 6; --i: 2; }
+.k-fish svg { width: 100%; height: auto; }
+
+/* =========================================================
+   02 · THE MOTHER OF ALL MOMOS — a die-cut momo sticker
+   ========================================================= */
+.k-momo { --wn: 24; --x: 52.4%; --y: 74%; --r: -8deg; --z: 8; --i: 8; }
+.k-momo svg { width: 100%; height: auto; }
+
+/* =========================================================
+   02 · LAUNCH EVENT — a ticket with a flame sticker
+   ========================================================= */
+.k-launch { --wn: 46; --x: 25%;   --y: 66%; --r: 4deg;   --z: 6; --i: 6; }
+
+.ticket {
+  --cut: 7cqmin;
+  aspect-ratio: 40 / 17;
+  display: flex !important;
+  background: var(--tex-grain), var(--pink);
+  color: var(--ink);
+  -webkit-mask:
+    radial-gradient(circle at var(--cut) 0, #0000 1.2cqmin, #000 1.27cqmin) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, #0000 1.2cqmin, #000 1.27cqmin) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle at var(--cut) 0, #0000 1.2cqmin, #000 1.27cqmin) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, #0000 1.2cqmin, #000 1.27cqmin) bottom / 100% 51% no-repeat;
+}
+.ticket__stub {
+  width: var(--cut);
+  display: grid !important;
+  place-items: center;
+  border-right: .22cqmin dashed rgb(22 19 15 / .5);
+}
+.ticket__stub span {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+  font-weight: 800;
+  font-size: 1.3cqmin;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.ticket__main {
+  flex: 1;
+  margin: 1.2cqmin;
+  padding: 1cqmin 1.6cqmin;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+  border: .2cqmin solid rgb(22 19 15 / .75);
+}
+.ticket__row {
+  display: flex !important;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.25cqmin;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.ticket__title {
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 112%;
+  font-size: 5.6cqmin;
+  line-height: .86;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.flame {
+  position: absolute !important;
+  z-index: 3;
+  right: -3.5cqmin;
+  top: -7.5cqmin;
+  width: 13cqmin;
+  rotate: 12deg;
+  filter: drop-shadow(.2cqmin .4cqmin .3cqmin rgb(60 36 12 / .4));
+}
+
+/* =========================================================
+   03 · PACKAGING — a Licious-style meat pack with a sleeve
+   ========================================================= */
+.k-pack { --wn: 50; --x: 3.5%;  --y: 44%; --r: -5deg;  --z: 4; --i: 5; }
+
+.pack {
+  position: relative;
+  aspect-ratio: 42 / 28;
+  padding: 1.6cqmin;
+  border-radius: 2.2cqmin;
+  background: var(--tex-grain), #f8f4ec;
+  box-shadow: inset 0 0 0 .3cqmin #ece4d6, inset 0 0 1.2cqmin rgb(0 0 0 / .08);
+}
+.pack__well {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1.4cqmin;
+  background: #f1e9dc;
+  box-shadow: inset 0 .4cqmin 1cqmin rgb(0 0 0 / .18);
+}
+.pack__well svg { width: 100%; height: 100%; }
+.pack__film {                      /* the clear plastic film */
+  position: absolute !important;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 18%, rgb(255 255 255 / .55) 24%, transparent 32%),
+    linear-gradient(120deg, transparent 58%, rgb(255 255 255 / .35) 62%, transparent 68%);
+}
+.pack__sleeve {
+  position: absolute !important;
+  z-index: 3;
+  top: -.6cqmin;
+  bottom: -.6cqmin;
+  left: 55%;
+  width: 15cqmin;
+  display: grid !important;
+  place-items: center;
+  background: var(--tex-grain), var(--red);
+  box-shadow: -.3cqmin 0 .6cqmin rgb(0 0 0 / .25), .3cqmin 0 .6cqmin rgb(0 0 0 / .2);
+  color: #fff;
+}
+.pack__logo {
+  position: relative;
+  width: 13cqmin;
+  height: 7cqmin;
+  display: grid !important;
+  place-items: center;
+}
+.pack__logo b {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 3.6cqmin;
+  letter-spacing: -.02em;
+  rotate: -6deg;
+}
+.pack__meta {
+  position: absolute !important;
+  bottom: 1.6cqmin;
+  font-weight: 700;
+  font-size: 1cqmin;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   04 · OLIVE HOTEL — a hotel key fob
+   ========================================================= */
+.k-olive { --wn: 50; --x: 60%; --y: 8%; --r: 14deg;  --z: 5; --i: 4; }
+
+.key {
+  position: absolute !important;
+  z-index: -1;
+  left: 50%;
+  top: -10.5cqmin;
+  width: 6cqmin;
+  translate: -50% 0;
+  rotate: -18deg;
+}
+.fob {
+  position: relative;
+  aspect-ratio: 15 / 31;
+  padding: 6cqmin 1.4cqmin 4cqmin;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  color: #efe6cf;
+  background: var(--tex-grain), var(--olive);
+  clip-path: polygon(50% 0, 100% 11%, 100% 82%, 50% 100%, 0 82%, 0 11%);
+  -webkit-mask: radial-gradient(circle at 50% 3.6cqmin, #0000 1cqmin, #000 1.08cqmin);
+  mask: radial-gradient(circle at 50% 3.6cqmin, #0000 1cqmin, #000 1.08cqmin);
+}
+.fob::before {                     /* gold inlay line */
+  content: "";
+  position: absolute;
+  inset: .8cqmin;
+  border: .2cqmin solid #d2b765;
+  clip-path: polygon(50% 0, 100% 11%, 100% 82%, 50% 100%, 0 82%, 0 11%);
+}
+.fob__logo {
+  position: relative;
+  width: 100%;
+  height: 8cqmin;
+  display: grid !important;
+  place-items: center;
+}
+.fob__logo b {
+  font-weight: 800;
+  font-stretch: 120%;
+  font-size: 2.4cqmin;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.fob__branch { width: 9cqmin; }
+.fob__room {
+  font-weight: 800;
+  font-size: 1.2cqmin;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.fob__room strong { display: block; font-size: 3.6cqmin; letter-spacing: 0; line-height: 1; color: #d2b765; }
+
+/* =========================================================
+   05 · DUOLINGO × LAKMÉ FASHION WEEK — a backstage pass
+   ========================================================= */
+.k-pass { --wn: 34; --x: 23.8%; --y: 4%;  --r: 8deg;   --z: 6; --i: 1; }
+/* your badge PNG has wide empty margins: only the badge itself is clickable.
+   (inset(top right bottom left) — delete this line if you change the image) */
+.hit.k-pass { --hit-clip: inset(0 28% 0 28%); }
+
+.lanyard {
+  position: absolute !important;
+  z-index: -1;
+  left: 50%;
+  bottom: 92%;
+  width: 4.6cqmin;
+  height: 9cqmin;
+  translate: -50% 0;
+  rotate: -14deg;
+  transform-origin: bottom;
+  background: var(--tex-grain), var(--ink);
+}
+.lanyard::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1cqmin;
+  width: 2.4cqmin;
+  height: 2.4cqmin;
+  translate: -50% 0;
+  border-radius: .5cqmin;
+  background: #a8b0b6;
+}
+.pass {
+  position: relative;
+  aspect-ratio: 24 / 34;
+  padding: 3.6cqmin 1.8cqmin 1.8cqmin;
+  display: flex !important;
+  flex-direction: column;
+  gap: 1.2cqmin;
+  border-radius: 1.2cqmin;
+  background: var(--tex-grain), var(--green);
+  color: #fff;
+  -webkit-mask: radial-gradient(ellipse 3cqmin .8cqmin at 50% 1.8cqmin, #0000 98%, #000);
+  mask: radial-gradient(ellipse 3cqmin .8cqmin at 50% 1.8cqmin, #0000 98%, #000);
+}
+.pass__top {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.pass__top b {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 3.2cqmin;
+  line-height: .9;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.pass__top i { font-style: normal; font-weight: 800; font-size: 1.2cqmin; letter-spacing: .12em; }
+.pass__photo {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: .5cqmin;
+  background: var(--tex-grain), #eaf6dc;
+}
+.pass__ph {                        /* placeholder for the character art */
+  position: absolute !important;
+  inset: 12%;
+  display: grid !important;
+  place-items: center;
+  border: .25cqmin dashed rgb(22 19 15 / .4);
+  border-radius: 50%;
+  font: 700 2.2cqmin/1 var(--f-hand);
+  color: var(--ink-soft);
+  text-align: center;
+}
+.pass__name {
+  font-weight: 900;
+  font-size: 1.55cqmin;
+  line-height: 1.1;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.pass__band {
+  margin: 0 -1.8cqmin -1.8cqmin;
+  padding: .9cqmin 0;
+  background: var(--ink);
+  color: var(--lime);
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.6cqmin;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  border-radius: 0 0 1.2cqmin 1.2cqmin;
+}
+
+/* =========================================================
+   06 · MORAL CODE — a die-cut sneaker sticker
+   ========================================================= */
+.k-shoe { --wn: 46; --x: 34.5%; --y: 38%; --r: 5deg;   --z: 7; --i: 3; }
+.k-shoe svg { width: 100%; height: auto; }
+
+/* =========================================================
+   07 · DUOTELUGU — a polaroid with lungi checks
+   ========================================================= */
+.k-lungi { --wn: 50; --x: 3.3%;  --y: 2%;  --r: -6deg;  --z: 5; --i: 0; }
+
+.polaroid {
+  aspect-ratio: 88 / 107;
+  padding: 1.7cqmin 1.7cqmin 0;
+  display: flex !important;
+  flex-direction: column;
+  background: var(--tex-grain), #faf6ee;
+}
+.polaroid__photo {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg, rgb(225 38 28 / .7) 0 1.1cqmin, transparent 1.1cqmin 3.6cqmin, rgb(35 70 201 / .55) 3.6cqmin 4.2cqmin, transparent 4.2cqmin 6cqmin),
+    repeating-linear-gradient(90deg, rgb(225 38 28 / .6) 0 1.1cqmin, transparent 1.1cqmin 3.6cqmin, rgb(35 70 201 / .5) 3.6cqmin 4.2cqmin, transparent 4.2cqmin 6cqmin),
+    #f7f1e3;
+  box-shadow: inset 0 0 0 .12cqmin rgb(0 0 0 / .3);
+}
+.polaroid__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(125deg, rgb(255 255 255 / .2), transparent 40%);
+}
+.polaroid__ph {
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  rotate: -4deg;
+  padding: 1cqmin 1.8cqmin;
+  background: var(--tex-grain), var(--paper);
+  box-shadow: .2cqmin .3cqmin .4cqmin rgb(0 0 0 / .25);
+  font: 700 2.6cqmin/1 var(--f-hand);
+  white-space: nowrap;
+}
+.polaroid__caption {
+  flex: 1;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font: 700 4cqmin/1 var(--f-hand);
+  color: var(--ink);
+  rotate: -2deg;
+}
+.k-lungi .tape { --tw: 10; --tr: 4deg; left: 33%; top: -1.6cqmin; }
+
+/* =========================================================
+   08 · DUOULTIMATUM — a final-notice envelope with a stamp
+   ========================================================= */
+.k-ultimatum { --wn: 42; --x: 61.9%; --y: 52%; --r: -6deg;  --z: 5; --i: 7; }
+
+.envelope {
+  position: relative;
+  aspect-ratio: 36 / 23;
+  padding: 2.4cqmin 2.6cqmin;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: .9cqmin;
+  background: var(--tex-grain), #f3ead8;
+  border: 1cqmin solid transparent;
+  border-image: repeating-linear-gradient(-45deg, var(--red) 0 2cqmin, #f3ead8 2cqmin 3cqmin, var(--ink) 3cqmin 5cqmin, #f3ead8 5cqmin 6cqmin) 10;
+}
+.envelope__stamp {
+  position: absolute !important;
+  right: 1.6cqmin;
+  top: 1.6cqmin;
+  width: 9cqmin;
+  aspect-ratio: 4 / 5;
+  padding: .7cqmin;
+  background: #fff;
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, #0000 .45cqmin, #000 .5cqmin) -.6cqmin -.6cqmin / 1.2cqmin 1.2cqmin round;
+  mask:
+    radial-gradient(circle at 50% 50%, #0000 .45cqmin, #000 .5cqmin) -.6cqmin -.6cqmin / 1.2cqmin 1.2cqmin round;
+}
+.envelope__img {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--tex-grain), var(--red);
+}
+.envelope__img svg { width: 100%; height: 100%; }
+.envelope__mark {                   /* rubber stamp */
+  position: absolute !important;
+  left: 2.6cqmin;
+  top: 2.4cqmin;
+  padding: .8cqmin 1.4cqmin .6cqmin;
+  rotate: -9deg;
+  border: .4cqmin solid var(--red);
+  border-radius: .6cqmin;
+  color: var(--red);
+  font-weight: 900;
+  font-stretch: 85%;
+  font-size: 2.7cqmin;
+  line-height: 1;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  -webkit-mask: var(--tex-stamp) 0 0 / 16cqmin 16cqmin;
+  mask: var(--tex-stamp) 0 0 / 16cqmin 16cqmin;
+}
+.envelope__line {
+  width: 55%;
+  height: .2cqmin;
+  background: rgb(22 19 15 / .45);
+}
+.envelope__line:first-of-type { width: 40%; }
+.envelope__to {
+  font-weight: 800;
+  font-size: 1.3cqmin;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: .4cqmin;
+}
+
+/* =========================================================
+   Loose bits (decoration only — not clickable)
+   ========================================================= */
+.decor {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  left: var(--x);
+  top: var(--y);
+  z-index: var(--z, 2);
+  width: calc(var(--wn) * 1cqmin);
+  transform: rotate(var(--r));
+  filter: drop-shadow(.15cqmin .3cqmin .2cqmin rgb(60 36 12 / .4));
+}
+.card-note {
+  --wn: 27; --x: 63.1%; --y: 4%; --r: 6deg; --z: 2; --i: 3;
+  aspect-ratio: 24 / 30;
+  padding: 3cqmin 2.4cqmin;
+  background: var(--tex-grain), var(--tex-stain) 0 0 / 300% 300%, #efe3c9;
+  font: 700 3.3cqmin/1.35 var(--f-hand);
+}
+.card-note span { display: block; }
+.card-note svg { width: 60%; margin-top: 1.2cqmin; }
+.smiley { --wn: 10; --x: 27.4%; --y: 42%; --r: -12deg; --z: 9; --i: 4; }
+.star   { --wn: 10; --x: 83.3%; --y: 72%; --r: 14deg; --z: 6; --i: 7; }
+.crown  { --wn: 9; --x: 4.8%; --y: 86%; --r: -8deg; --z: 1; --i: 5; filter: none; }
+
+/* tissue paper peeking out under everything */
+.tissue {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 40%, rgb(0 0 0 / .06) 40.4%, rgb(255 255 255 / .6) 41%, transparent 43%),
+    linear-gradient(62deg, transparent 63%, rgb(0 0 0 / .05) 63.3%, rgb(255 255 255 / .5) 63.9%, transparent 66%),
+    var(--tex-crumple) 0 0 / 40cqmin 40cqmin,
+    #f7f2e8;
+  background-blend-mode: normal, normal, multiply, normal;
+  filter: contrast(1.45);
+  opacity: .66;
+}
+.tissue--a {
+  inset: -2% 30% 30% -3%;
+  rotate: -3deg;
+  clip-path: polygon(0 0, 100% 0, 96% 14%, 99% 30%, 92% 47%, 97% 66%, 88% 84%, 80% 100%, 58% 93%, 36% 100%, 14% 92%, 0 97%);
+}
+.tissue--b {
+  inset: 34% -3% -3% 42%;
+  rotate: 4deg;
+  clip-path: polygon(8% 10%, 26% 0, 48% 8%, 70% 2%, 100% 6%, 100% 100%, 4% 100%, 0 78%, 6% 54%, 1% 30%);
+}
+.tissue--c {
+  inset: 60% 50% -4% -2%;
+  rotate: 2deg;
+  opacity: .7;
+  clip-path: polygon(0 12%, 30% 0, 62% 10%, 100% 4%, 96% 40%, 100% 72%, 92% 100%, 0 100%);
+}
+
+/* =========================================================
+   Upright box (phones): rearranged for a tall box
+   ========================================================= */
+@media (max-aspect-ratio: 1/1) {
+  .k-lungi     { --x: 6%;  --y: 4.8%;  --r: -6deg; --z: 5; }
+  .k-pass      { --x: 36%; --y: 2.4%;  --r: 7deg;  --z: 6; }
+  .k-olive     { --x: 72%; --y: 6%;    --r: 12deg; --z: 5; }
+  .k-fish      { --x: 8%;  --y: 26.2%; --r: -9deg; --z: 6; }
+  .card-note   { --x: 62%; --y: 27.4%; --r: 5deg;  --z: 2; }
+  .k-shoe      { --x: 30%; --y: 41.7%; --r: 6deg;  --z: 7; }
+  .k-pack      { --x: 6%;  --y: 54.8%; --r: -5deg; --z: 4; }
+  .k-ultimatum { --x: 46%; --y: 57.1%; --r: 6deg;  --z: 5; }
+  .k-launch    { --x: 30%; --y: 76.2%; --r: -5deg; --z: 6; }
+  .smiley      { --x: 78%; --y: 76.2%; --z: 8; }
+  .star        { --x: 84%; --y: 54.8%; --z: 6; }
+  .k-momo      { --x: 6%;  --y: 79.2%; --r: -6deg; --z: 7; }
+  .crown       { --x: 42%; --y: 91%; }
+}

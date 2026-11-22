@@ -1,0 +1,247 @@
+/* =========================================================
+   ARCHIT — base.css
+   Colours, fonts, textures and the page frame
+   (logo, menu, footer). Change a colour here and it
+   changes everywhere.
+   ========================================================= */
+
+:root {
+  /* ---- colour palette ---- */
+  --bg: #ffffff;             /* white table */
+  --paper: #f5ead7;          /* paper & cards */
+  --paper-2: #ece0c9;
+  --kraft: #d7bb8e;          /* box outside (pale, worn kraft) */
+  --kraft-2: #c29665;        /* box inside */
+  --kraft-3: #a87a49;        /* box walls in shadow */
+
+  --red: #e1261c;
+  --red-ink: #c41d14;
+  --ink: #16130f;            /* near-black for type */
+  --ink-soft: #4d463c;
+  --lime: #d4f53c;
+  --yellow: #f6c400;
+  --pink: #f2a9b5;
+  --olive: #5d6a25;
+  --green: #5bc22c;          /* Duolingo-style green, used on the pass */
+  --blue: #2346c9;
+
+  /* ---- type ---- */
+  --f-display: "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif; /* heavy display + body */
+  --f-marker: "Permanent Marker", "Marker Felt", cursive;                     /* loud handwriting */
+  --f-hand: "Caveat", "Bradley Hand", cursive;                                /* notes */
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --spring: cubic-bezier(.34, 1.45, .64, 1);
+
+  /* ---- textures (drawn with SVG, no image files needed) ---- */
+  --tex-grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .14  0 0 0 0 .09  0 0 0 0 .04  0 0 0 .22 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
+  --tex-fiber: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.006 .55' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .3  0 0 0 0 .18  0 0 0 0 .07  0 0 0 .3 0'/></filter><rect width='400' height='400' filter='url(%23f)'/></svg>");
+  /* big soft blotches: stains, wear, uneven paper */
+  --tex-stain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='700'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='4' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .12  0 0 0 1.1 -.42'/></filter><rect width='700' height='700' filter='url(%23s)'/></svg>");
+  /* white scuffs and scratches */
+  --tex-scuff: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='u'><feTurbulence type='fractalNoise' baseFrequency='.02 .4' numOctaves='3' seed='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .97  0 0 0 0 .9  0 0 0 2.4 -1.62'/></filter><rect width='500' height='500' filter='url(%23u)'/></svg>");
+  /* crumpled tissue (lit noise) */
+  --tex-crumple: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='5' seed='4' stitchTiles='stitch'/><feDiffuseLighting lighting-color='%23fff' surfaceScale='5' diffuseConstant='1.1'><feDistantLight azimuth='225' elevation='42'/></feDiffuseLighting></filter><rect width='600' height='600' filter='url(%23c)'/></svg>");
+  /* masks: patchy ink for stamps, and worn print */
+  --tex-stamp: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.15'/></filter><rect width='160' height='160' filter='url(%23s)'/></svg>");
+  --tex-wear: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='.03 .09' numOctaves='4' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.2'/></filter><rect width='300' height='300' filter='url(%23w)'/></svg>");
+
+  --barcode: linear-gradient(90deg, currentColor 0 3%, transparent 3% 5%, currentColor 5% 6%, transparent 6% 9%, currentColor 9% 13%, transparent 13% 15%, currentColor 15% 16%, transparent 16% 19%, currentColor 19% 21%, transparent 21% 24%, currentColor 24% 25%, transparent 25% 27%, currentColor 27% 31%, transparent 31% 33%, currentColor 33% 34%, transparent 34% 37%, currentColor 37% 38%, transparent 38% 41%, currentColor 41% 45%, transparent 45% 47%, currentColor 47% 48%, transparent 48% 51%, currentColor 51% 53%, transparent 53% 55%, currentColor 55% 58%, transparent 58% 60%, currentColor 60% 61%, transparent 61% 64%, currentColor 64% 66%, transparent 66% 69%, currentColor 69% 70%, transparent 70% 72%, currentColor 72% 76%, transparent 76% 78%, currentColor 78% 79%, transparent 79% 82%, currentColor 82% 84%, transparent 84% 86%, currentColor 86% 87%, transparent 87% 90%, currentColor 90% 93%, transparent 93% 95%, currentColor 95% 96%, transparent 96% 98%, currentColor 98% 100%);
+  /* soft uneven light & old-paper patches on the table */
+  --surface-light: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgb(0 0 0 / .035) 100%);
+  --tape-edge: polygon(0% 12%, 2% 0%, 98% 0%, 100% 14%, 98.4% 32%, 100% 52%, 98% 72%, 100% 90%, 98% 100%, 2% 100%, 0% 86%, 1.6% 66%, 0% 48%, 1.8% 28%);
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  background: var(--bg);
+}
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* ---------- the table surface ---------- */
+.surface {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--surface-light), var(--bg);
+}
+
+/* ---------- small UI label style ---------- */
+.ui {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* ---------- logo ---------- */
+.logo {
+  display: inline-block;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 112%;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.logo sup { font-size: .42em; font-style: normal; font-weight: 700; vertical-align: .95em; margin-left: .05em; }
+
+/* ---------- scene layout ---------- */
+.scene {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  /* trim anything (the tilted box, the lid peeking out) that pokes past the
+     screen edge — otherwise phones zoom out and the bottom of pages gets cut off */
+  overflow: hidden;
+  overflow: clip;
+  padding: max(20px, env(safe-area-inset-top)) clamp(18px, 3vw, 40px) max(16px, env(safe-area-inset-bottom));
+}
+.topbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: var(--ink);
+}
+.footbar__name { display: flex; align-items: center; gap: 14px; }
+.footbar__tags { display: flex; gap: 10px; align-items: center; }
+.footbar__tags i { font-style: normal; font-size: 7px; }
+
+/* MENU / CLOSE button */
+.navbtns { position: relative; display: flex; gap: 28px; }
+.navbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.navbtn .burger { display: grid; gap: 3px; width: 15px; }
+.navbtn .burger::before,
+.navbtn .burger::after,
+.navbtn .burger i { content: ""; display: block; height: 1.8px; background: currentColor; }
+.navbtn .x { font-size: 15px; letter-spacing: 0; font-weight: 500; }
+.navlink { color: var(--ink); text-decoration: none; }
+.navlink:hover { color: var(--red-ink); }
+.navbtn:focus-visible,
+.logo:focus-visible { outline: 2px dashed var(--red); outline-offset: 4px; }
+
+/* the menu: a clean dropdown listing the work */
+.menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -8px;
+  width: min(340px, calc(100vw - 32px));
+  padding: 8px;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / .08);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .04), 0 12px 32px rgb(0 0 0 / .1);
+  transform-origin: top right;
+  animation: menu-in .3s var(--ease-out);
+}
+.menu__title {
+  margin: 8px 12px 6px;
+  color: #8a857d;
+}
+.menu ol,
+.menu ul { margin: 0; padding: 0; list-style: none; }
+.menu ol { counter-reset: m; }
+.menu__title--more { margin-top: 10px; padding-top: 12px; border-top: 1px solid rgb(0 0 0 / .07); }
+.menu ul a { grid-template-columns: 1fr auto; }
+.menu li { counter-increment: m; }
+.menu a {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: -.005em;
+  transition: background .2s;
+}
+.menu ol a::before {
+  content: counter(m, decimal-leading-zero);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: #a19c94;
+}
+.menu a::after {
+  content: "→";
+  font-size: 14px;
+  color: var(--ink);
+  opacity: 0;
+  translate: -4px 0;
+  transition: opacity .2s, translate .25s var(--ease-out);
+}
+.menu a:hover,
+.menu a:focus-visible { background: #f4f3f1; outline: none; }
+.menu a:hover::after,
+.menu a:focus-visible::after { opacity: 1; translate: 0 0; }
+@keyframes menu-in {
+  from { opacity: 0; translate: 0 -6px; scale: .98; }
+}
+
+
+@media (max-width: 560px) {
+  .navbtn__long { display: none; }
+  .navlink { display: none; }          /* on phones, About & Resume live in the menu */
+  .navbtns { gap: 20px; }
+  .logo { font-size: 21px; }
+  .footbar__tags { display: none; }
+}
+
+/* respect people who turn off animation in their system settings */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+}
